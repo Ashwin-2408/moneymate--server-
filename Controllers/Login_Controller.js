@@ -12,11 +12,11 @@ const Login_controllers = {
 
         await connection.beginTransaction();
         const [rows, columns] = await pool.query(
-          "select * from login where Email=? ",
+          "select * from user where Email=? ",
           Email
         );
         if (rows.length == 0) {
-          await pool.query("Insert into login(Email,Password) values(?,?)", [
+          await pool.query("Insert into user(Email,Password) values(?,?)", [
             Email,
             Password,
           ]);
@@ -43,14 +43,24 @@ const Login_controllers = {
         connection = await pool.getConnection();
         connection.beginTransaction();
         const [rows, columns] = await pool.query(
-          "select * from login where email=?",
+          "select * from user where email=?",
           [Email]
         );
-        if (rows.Password != Password) {
+        if (rows.length === 0) {
           connection.rollback();
-          res.status(400).send({ ERR: "passowrd is incorrect" });
+          return res.status(400).send({ ERR: "Email isn't registered" });
+        } else if (rows[0].Password !== Password) {
+          console.log(rows);
+          console.log(rows.Password);
+          connection.rollback();
+          return res.status(400).send({ ERR: "passowrd is incorrect" });
+        } else if (rows[0].Password === Password) {
+          await connection.commit();
+          return res.status(200).send({ MSG: "Success" });
         }
-      } catch (error) {}
+      } catch (error) {
+        console.log("The error is:", error);
+      }
     }
   },
 };

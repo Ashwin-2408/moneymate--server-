@@ -1,9 +1,9 @@
 const { sequelize } = require("./db");
 const { DataTypes } = require("sequelize");
-const Login = sequelize.define(
-  "Login",
+const User = sequelize.define(
+  "User",
   {
-    id: {
+    userID: {
       type: DataTypes.INTEGER,
       allowNull: false,
       unique: true,
@@ -22,9 +22,9 @@ const Login = sequelize.define(
     },
   },
   {
-    tableName: "login",
+    tableName: "user",
     timestamps: false,
   }
 );
 
-module.exports = Login;
+module.exports = User;
