@@ -1,29 +1,35 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("./db");
 
-const Income_category = sequelize.define(
-  "Income_Category",
+const Transaction = sequelize.define(
+  "Transaction",
   {
-    Category_ID: {
+    Transaction_ID: {
       type: DataTypes.INTEGER,
-      allowNULL: false,
-      unique: true,
       autoIncrement: true,
       primaryKey: true,
-    },
-    UserID: {
-      type: DataTypes.INTEGER,
       allowNULL: false,
       unique: true,
+    },
+    User_ID: {
+      type: DataTypes.INTEGER,
+      allowNULL: false,
       references: {
         model: "user",
         key: "UserID",
       },
     },
+    Transaction_Type: {
+      type: DataTypes.ENUM("Expense", "Income"),
+      allowNULL: false,
+    },
+    Transaction_Amount: {
+      type: DataTypes.DOUBLE,
+      allowNULL: false,
+    },
     Category_Name: {
       type: DataTypes.STRING,
       allowNULL: false,
-      unique: true,
     },
     createdAt: {
       type: DataTypes.DATE,
@@ -35,9 +41,9 @@ const Income_category = sequelize.define(
     },
   },
   {
-    tableName: "Income_Category",
+    tableName: "Transaction",
     timestamps: true,
   }
 );
 
-module.exports = Income_category;
+module.exports = Transaction;

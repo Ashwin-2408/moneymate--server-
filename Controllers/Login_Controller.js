@@ -1,7 +1,7 @@
 const pool = require("../db_connection");
 
 const Login_controllers = {
-  signup: async (req, res) => {
+  Signup: async (req, res) => {
     const { Email, Password } = req.body;
     if (!Email || !Password) {
       return res.status(400).send({ ERR: "invalid body request" });
@@ -11,15 +11,15 @@ const Login_controllers = {
         connection = await pool.getConnection();
 
         await connection.beginTransaction();
-        const [rows, columns] = await pool.query(
+        const [rows, columns] = await connection.query(
           "select * from user where Email=? ",
           Email
         );
         if (rows.length == 0) {
-          await pool.query("Insert into user(Email,Password) values(?,?)", [
-            Email,
-            Password,
-          ]);
+          await connection.query(
+            "Insert into user(Email,Password) values(?,?)",
+            [Email, Password]
+          );
           await connection.commit();
           return res
             .status(200)
@@ -29,7 +29,11 @@ const Login_controllers = {
           return res.status(403).send({ ERR: "Email is already registered" });
         }
       } catch (error) {
+        if (connection) {
+          await connection.rollback();
+        }
         console.log(error);
+        return res.status(500).send({ ERR: "SERVER error" });
       }
     }
   },
@@ -42,7 +46,7 @@ const Login_controllers = {
       try {
         connection = await pool.getConnection();
         connection.beginTransaction();
-        const [rows, columns] = await pool.query(
+        const [rows, columns] = await connection.query(
           "select * from user where email=?",
           [Email]
         );
@@ -59,7 +63,11 @@ const Login_controllers = {
           return res.status(200).send({ MSG: "Success" });
         }
       } catch (error) {
-        console.log("The error is:", error);
+        if (connection) {
+          await connection.rollback();
+        }
+        console.log(error);
+        return res.status(500).send({ ERR: "SERVER error" });
       }
     }
   },

@@ -13,22 +13,27 @@ const Account = sequelize.define(
     userID: {
       type: DataTypes.INTEGER,
       allowNull: false,
+
       references: {
         model: "user", // Name of the Users table
         key: "userID",
       },
     },
-    accountName: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    accountType: {
-      type: DataTypes.ENUM("Savings", "Checking", "Investment"),
-      allowNull: false,
-    },
+
     balance: {
       type: DataTypes.FLOAT,
       allowNull: false,
+      defaultValue: 0.0,
+    },
+
+    Income: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      defaultValue: 0.0,
+    },
+    Expense: {
+      type: DataTypes.FLOAT,
+      allowNUll: false,
       defaultValue: 0.0,
     },
     createdAt: {
