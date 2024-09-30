@@ -1,6 +1,6 @@
-const e = require("express");
-const pool = require("../db_connection");
-const { Category } = require("@mui/icons-material");
+const { Sequelize, DataTypes } = require("sequelize");
+const Expense_category = require("../Models/Expense_Category");
+const { cardActionAreaClasses } = require("@mui/material");
 
 const Category_Controller = {
   Add_Expense_Category: async (req, res) => {
@@ -8,35 +8,47 @@ const Category_Controller = {
     if (!Category_Name || !UserID) {
       return res.status(400).send({ ERR: "Bad body request" });
     }
-    let connection;
 
     try {
-      connection = await pool.getConnection();
-      await connection.beginTransaction();
-      const query =
-        "select Category_Name from Expense_Category where Category_Name=? && UserID=?";
-      const [rows] = await connection.query(query, [Category_Name, UserID]);
-      if (rows.length !== 0) {
-        connection.rollback();
+      const categories = await Expense_category.findAll({
+        where: { UserID: UserID, Category_Name: Category_Name },
+      });
+      console.log(categories);
+      if (categories.length !== 0) {
         return res.status(400).send("Category already exists");
       } else {
-        const query =
-          "Insert into  Expense_Category(Category_Name,User_Id) values (?,?)";
-        await connection.query(query, [Category_Name, UserID]);
-        await connection.commit();
+        await Expense_category.create({
+          Category_Name: Category_Name,
+          UserID: UserID,
+        });
+
         return res.status(200).send({ LOG: "category added" });
       }
     } catch (error) {
-      if (connection) await connection.rollback();
       console.error(error);
       return res.status(500).send({ ERR: "Server error" });
-    } finally {
-      if (connection) {
-        connection.release();
-      }
     }
   },
   Delete_Expense: async (req, res) => {
-    const { UserID, Category_Name } = req.body;
+    const UserID = req.query.UserID;
+    const Category_Name = req.query.Category_Name;
+    if (!UserID || !Category_Name) {
+      return res.status(400).send({ ERR: "bad body request" });
+    }
+
+    try {
+      await Expense_category.destroy({
+        where: {
+          UserID: UserID,
+          Category_Name: Category_Name,
+        },
+      });
+      res.status(200).send({ LOG: "successfully deleted" });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ ERR: "server error" });
+    }
   },
 };
+
+module.exports = Category_Controller;

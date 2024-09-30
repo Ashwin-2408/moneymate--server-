@@ -8,12 +8,12 @@ const Transaction = sequelize.define(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      allowNULL: false,
+      allowNull: false,
       unique: true,
     },
     User_ID: {
       type: DataTypes.INTEGER,
-      allowNULL: false,
+      allowNull: false,
       references: {
         model: "user",
         key: "UserID",
@@ -21,15 +21,15 @@ const Transaction = sequelize.define(
     },
     Transaction_Type: {
       type: DataTypes.ENUM("Expense", "Income"),
-      allowNULL: false,
+      allowNull: false,
     },
     Transaction_Amount: {
       type: DataTypes.DOUBLE,
-      allowNULL: false,
+      allowNull: false,
     },
     Category_Name: {
       type: DataTypes.STRING,
-      allowNULL: false,
+      allowNull: false,
     },
     createdAt: {
       type: DataTypes.DATE,

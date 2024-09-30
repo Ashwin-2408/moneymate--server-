@@ -6,15 +6,14 @@ const Expense_category = sequelize.define(
   {
     Category_ID: {
       type: DataTypes.INTEGER,
-      allowNULL: false,
+      allowNull: false,
       unique: true,
       autoIncrement: true,
       primaryKey: true,
     },
     UserID: {
       type: DataTypes.INTEGER,
-      allowNULL: false,
-      unique: true,
+      allowNull: false,
       references: {
         model: "user",
         key: "UserID",
@@ -22,8 +21,7 @@ const Expense_category = sequelize.define(
     },
     Category_Name: {
       type: DataTypes.STRING,
-      allowNULL: false,
-      unique: true,
+      allowNull: false,
     },
     createdAt: {
       type: DataTypes.DATE,

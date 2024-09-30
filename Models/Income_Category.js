@@ -6,14 +6,14 @@ const Income_category = sequelize.define(
   {
     Category_ID: {
       type: DataTypes.INTEGER,
-      allowNULL: false,
+      allowNull: false,
       unique: true,
       autoIncrement: true,
       primaryKey: true,
     },
     UserID: {
       type: DataTypes.INTEGER,
-      allowNULL: false,
+      allowNull: false,
       unique: true,
       references: {
         model: "user",
@@ -22,7 +22,7 @@ const Income_category = sequelize.define(
     },
     Category_Name: {
       type: DataTypes.STRING,
-      allowNULL: false,
+      allowNull: false,
       unique: true,
     },
     createdAt: {
