@@ -8,5 +8,8 @@ router.post("/Add_Expense", async (req, res) => {
 router.delete("/Delete_Expense", async (req, res) => {
   Category_Controller.Delete_Expense(req, res);
 });
+router.put("/Modify_Expense", async (req, res) => {
+  Category_Controller.Modify_Expense(req, res);
+});
 
 module.exports = router;

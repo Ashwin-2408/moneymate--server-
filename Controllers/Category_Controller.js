@@ -49,6 +49,24 @@ const Category_Controller = {
       return res.status(500).send({ ERR: "server error" });
     }
   },
+  Modify_Expense: async (req, res) => {
+    const { Category_Id, UserID, Category_Name } = req.body;
+    try {
+      await Expense_category.update(
+        { Category_Name: Category_Name },
+        {
+          where: {
+            Category_Id: Category_Id,
+            UserID: UserID,
+          },
+        }
+      );
+      return res.status(200).send("Expense Updated");
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ ERR: "server error" });
+    }
+  },
 };
 
 module.exports = Category_Controller;
