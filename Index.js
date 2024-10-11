@@ -3,6 +3,7 @@ const cors = require("cors");
 const app = express();
 
 const { sequelize, connect_database } = require("./Models/db");
+require("dotenv").config();
 const Account = require("./Models/Account");
 const User = require("./Models/User");
 const Expense_category = require("./Models/Expense_Category");

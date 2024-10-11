@@ -1,4 +1,7 @@
 const pool = require("../db_connection");
+const jwt = require("jsonwebtoken");
+
+const secret_key = process.env.my_secret_key;
 
 const Login_controllers = {
   Signup: async (req, res) => {
@@ -59,8 +62,15 @@ const Login_controllers = {
           connection.rollback();
           return res.status(400).send({ ERR: "passowrd is incorrect" });
         } else if (rows[0].Password === Password) {
+          const token = jwt.sign(
+            {
+              userID: rows[0].userID,
+            },
+            secret_key,
+            { expiresIn: "1h" }
+          );
           await connection.commit();
-          return res.status(200).send({ MSG: "Success" });
+          return res.status(200).send({ MSG: "Success", token: token });
         }
       } catch (error) {
         if (connection) {
